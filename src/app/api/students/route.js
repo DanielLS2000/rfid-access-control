@@ -46,3 +46,24 @@ export async function GET(req) {
     }
 }
 
+export async function DELETE(req) {
+    if (req.method !== "DELETE") return NextResponse.json({ message: "Método não permitido" }, {status: 405});
+
+    const data = await req.json()
+    const { matricula } = data;
+
+    try {
+        const db = await connectDB();
+        const existingStudent = await db.get("SELECT * FROM students WHERE matricula = ?", [matricula]);
+        if (!existingStudent) {
+            return NextResponse.json({ message: "Aluno não encontrado" }, {status:404});
+        }
+        await db.run("DELETE FROM students WHERE matricula = ?", [matricula]);
+
+        return NextResponse.json({ message: "Aluno deletado com sucesso!" }, {status: 200});
+    } catch (error) {
+        console.error("Erro ao deletar aluno:", error);
+        return NextResponse.json({ message: "Erro no servidor" }, {status: 500});
+    }
+}
+
