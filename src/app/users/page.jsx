@@ -88,7 +88,7 @@ export default function Students() {
                 Registrar Novo Aluno
             </button>
             <button 
-                onClick={() => router.push("/home")}
+                onClick={() => router.push("/")}
                 className="mt-4 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
             >
                 Home

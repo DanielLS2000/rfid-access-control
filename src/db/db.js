@@ -14,11 +14,25 @@ async function initDB() {
     const db = await connectDB();
     await db.exec(`
         CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            matricula TEXT UNIQUE NOT NULL,
+            matricula TEXT PRIMARY KEY,
             nome TEXT NOT NULL,
             senha TEXT NOT NULL
-        )
+        );
+
+        CREATE TABLE IF NOT EXISTS disciplines (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            horario TEXT NOT NULL,
+            sala TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS discipline_students (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            disciplina_id INTEGER NOT NULL,
+            matricula TEXT NOT NULL,
+            access_code TEXT NOT NULL,
+            FOREIGN KEY (disciplina_id) REFERENCES disciplines(id) ON DELETE CASCADE,
+            FOREIGN KEY (matricula) REFERENCES students(matricula) ON DELETE CASCADE
+        );
     `);
 }
 

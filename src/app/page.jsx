@@ -38,6 +38,13 @@ export default function Home() {
                     >
                         Página do Usuário
                     </button>
+
+                    <button 
+                        onClick={() => router.push("/disciplines")}
+                        className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition duration-200"
+                    >
+                        Disciplinas
+                    </button>
                 </div>
             </div>
         </div>
