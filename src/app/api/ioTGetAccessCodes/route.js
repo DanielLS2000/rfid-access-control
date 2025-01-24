@@ -20,8 +20,8 @@ function isWithinTwoHours(disciplineTime) {
     return differenceInMs >= 0 && differenceInMs <= twoHoursInMs;
 }
 
-export async function GET(req) {
-    if (req.method !== "GET") {
+export async function POST(req) {
+    if (req.method !== "POST") {
         return NextResponse.json({ message: "Método não permitido" }, {status: 405});
     }
 
@@ -30,7 +30,7 @@ export async function GET(req) {
     const sala = data;
 
     if (!sala) {
-        return NextResponse.json({ message: "ID da disciplina é obrigatório" }, {status: 400});
+        return NextResponse.json({ message: "Sala é obrigatório" }, {status: 400});
     }
 
     const db = await connectDB();
@@ -42,7 +42,6 @@ export async function GET(req) {
         `, [sala])
     
     
-    console.log(disciplinas)
     var disciplina_id;
     disciplinas.forEach((disciplina) => {
         if (isWithinTwoHours(disciplina.horario)){
@@ -60,5 +59,12 @@ export async function GET(req) {
         WHERE disciplina_id = ?
     `, [disciplina_id]);
 
-    return NextResponse.json(codes, {status: 200});
+    const access_code = await req.json()
+    if (codes.includes(access_code.UID)){
+        console.log("Aluno autorizado")
+        return NextResponse.json({result: true}, {status: 200});
+    } else {
+        console.log("Aluno não autorizado")
+        return NextResponse.json({result: false}, {status: 200});
+    }
 }
